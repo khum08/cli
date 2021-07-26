@@ -1,18 +1,12 @@
 #!/usr/bin/env node
 
 const { program } = require('commander');
-const inquirer = require('inquirer');
-const ora = require('ora');
-const child_process = require('child_process');
+require('./collectInfo');
 
 // set version
 const packageJson = require('./package.json');
 program.version(packageJson.version);
 
-// execute shell code
-child_process.exec('echo \'hello shell\'', (error, out, err) =>{
-    console.log('end', error, out, err);
-});
 
 // set init command
 program.command('init')
@@ -38,13 +32,15 @@ async function createProject() {
     // .catch(error => {
     //     console.log('error');
     // });
-    const answer = await inquirer.prompt([
-        {
-            type: 'input',
-            name: 'name',
-            message: '请输入项目名称',
-        },
-    ]);
-    console.log(answer);
+    // const answer = await inquirer.prompt([
+    //     {
+    //         type: 'input',
+    //         name: 'name',
+    //         message: '请输入项目名称',
+    //     },
+    // ]);
+    // console.log(answer);
 }
+
+
 

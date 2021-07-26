@@ -1,33 +1,30 @@
 const fs = require('fs');
-const { exit } = require('process');
 
-
-function mkdir(path) {
-    const exist = fs.existsSync(path);
-    if (!exist) {
-        fs.mkdirSync(path);
+const fsUtils = {
+    mkdir(path) {
+        const exist = fs.existsSync(path);
+        if (!exist) {
+            fs.mkdirSync(path);
+        }
+    },
+    
+    rmdir(path) {
+        const exist = fs.existsSync(path);
+        if (exist) {
+            fs.rmdirSync(path);
+        }
+    },
+    
+    rmfile(path) {
+        const exist = fs.existsSync(path);
+        if (exist) {
+            fs.unlinkSync(path);
+        }
     }
 }
 
-function rmdir(path) {
-    const exist = fs.existsSync(path);
-    if (exist) {
-        fs.rmdirSync(path);
-    }
-}
-
-function rmfile(path) {
-    const exist = fs.existsSync(path);
-    if (exist) {
-        fs.unlinkSync(path);
-    }
-}
+module.exports = fsUtils;
 
 
-// ============== test =================
-mkdir('a');
 
-rmdir('a');
-
-rmfile('a.js')
 
