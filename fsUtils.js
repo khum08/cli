@@ -20,6 +20,11 @@ const fsUtils = {
         if (exist) {
             fs.unlinkSync(path);
         }
+    },
+
+    writeFile(path, string) {
+        fs.writeFileSync(path, string);
+        return Promise.resolve();
     }
 }
 

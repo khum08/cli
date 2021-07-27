@@ -37,20 +37,20 @@ const questions = [
     },
     {
         type: 'input',
-        name: 'liscense',
-        message: '请输入项目Liscense?',
-        choices: [
-            {
-              key: '1',
-              name: 'MIT',
-              value: 'MIT',
-            },
-            {
-              key: '2',
-              name: 'ISC',
-              value: 'ISC',
-            }
-        ],
+        name: 'license',
+        message: '请输入项目License?',
+        // choices: [
+        //     {
+        //       key: 'a',
+        //       name: 'MIT',
+        //       value: 'MIT',
+        //     },
+        //     {
+        //       key: 'b',
+        //       name: 'ISC',
+        //       value: 'ISC',
+        //     }
+        // ],
         default: 'MIT'
     },
     {
@@ -79,7 +79,11 @@ const questions = [
     }
 ];
 
-inquirer.prompt(questions).then((answers) => {
-    console.log('\nOrder receipt:');
-    console.log(JSON.stringify(answers));
-});
+module.exports = {
+  query(callback) {
+    inquirer.prompt(questions).then((answers) => {
+      callback(answers);
+    });
+  }  
+}
+
