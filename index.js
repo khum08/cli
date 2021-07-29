@@ -6,9 +6,13 @@ const Notices = require('./notice');
 const CMD = require('./cmd');
 const fsUtils = require('./fsUtils');
 const path = require('path');
+const download = require('download-git-repo');
+const shell = require('shelljs');
+const replace = require('replace-in-file');
 
 // set version
 const packageJson = require('./package.json');
+const { replaceInFile } = require('replace-in-file');
 program.version(packageJson.version);
 
 
@@ -21,48 +25,52 @@ program.command('init')
 
 program.parse(process.argv);
 
+const colors = ['red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'gray']
+let colorIndex = 0;
+
 // interactive with user
 function startProject(config) {
     console.log(config);
-    let jsonTemplate;
-    // if (config.typescript) {
-        jsonTemplate = require('./template/template.package.json');
-    // }
-    const result = applyConfig(config, jsonTemplate);
-    console.log('result:', result);
-    console.log(__dirname);
+    let jsonTemplateSrc;
+    if (config.language === 'typescript') {
+        jsonTemplateSrc = 'khum08/cli-template#ts-library'   
+    }
+    const loading = Notices.getLoading('开始初始化项目，请耐心等待哦~');
+    let timer = setInterval(() => {
+        loading.color = colors[colorIndex];
+        colorIndex = (colorIndex + 1) % colors.length;
+    }, 2000);
+    download(jsonTemplateSrc, `./${config.name}`, function (err) {
+        clearInterval(timer);
 
-    fsUtils.writeFile(path.join(__dirname, 'package.json'), JSON.stringify(result))
-    .then(() => {
-        return CMD.exec(CMD.cp('.gitignore', './'));
-    })
-    .then(v => {
-        return CMD.exec(CMD.cp('tsconfig.json', './'));
-    })
-    .then(v => {
-        Notices.succeed('successfully');
-    })
-    .catch(err => {
-        Notices.fail('error:' + err);
+        if (err) {
+            loading.fail('项目初始化失败');
+        } else {
+            loading.succeed('项目初始成功');
+            shell.cd(config.name);
+            replaceFiles(config);
+
+            shell.exec('npm install');
+            Notices.succeed('项目初始化好了😁');
+            Notices.succeed('使用npm run start, 开始愉快的coding~');
+
+            // CMD.exec(`cd ${config.name} && npm install`).then(() => {
+            //     Notices.succeed('项目初始化好了😁');
+            // });
+        }
     });
 
 }
 
-const filterKey = ['name', 'version', 'description', 'author', 'liscense'];
 
-function replace(oriStr, replaceKey, value) {
-    let str = new RegExp('--' + replaceKey + '--', 'ig');
-    return oriStr.replace(str, value);
-}
-
-function applyConfig(config, templateJson) {
-    let jsonStr = JSON.stringify(templateJson);
-    for(let key in config) {
-        if (filterKey.includes(key)) {
-            jsonStr = replace(jsonStr, key, config[key]);
-        }
-    }
-    return JSON.parse(jsonStr);
+function replaceFiles(config) {
+    const from = Object.keys(config).map(key => '--o_' + key + '--');
+    const to = Object.values(config);
+    replace.sync({
+        files: path.resolve('tools', 'init.ts'),
+        from,
+        to
+    });
 }
 
 

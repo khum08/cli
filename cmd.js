@@ -2,16 +2,6 @@ const child_process = require('child_process');
 const notices = require('./notice');
 
 module.exports = {
-    CMD: {
-        npmInit: "npm init",
-        gitInit: "git init",
-        iWepack: "npm install webpack webpack-cli --save-dev",
-        iTypescript: "npm install --save-dev typescript ts-loader && tsc --init"
-    },
-
-    cp(name, dist) {
-        return `cp ./template/template.${name} ${dist}${name}`;
-    },
 
     exec(cmd) {
         // console.log('cmd exec');
