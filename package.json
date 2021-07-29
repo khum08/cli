@@ -1,5 +1,5 @@
 {
-  "name": "fe-cli",
+  "name": "yzk-cli",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,8 +10,8 @@
     "fe-cli": "./index.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "yuanzhenkun",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^4.1.1",
     "commander": "^8.0.0",
