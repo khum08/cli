@@ -9,7 +9,7 @@
   "bin": {
     "fe-cli": "./index.js"
   },
-  "keywords": [],
+  "keywords": ["cli", "fe-cli"],
   "author": "yuanzhenkun",
   "license": "MIT",
   "dependencies": {
